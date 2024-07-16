@@ -40,12 +40,12 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithoutNameShouldCauseException() {
-        String body = """
-                {"name": "",
-                  "description": "Description",
-                  "releaseDate": "1980-03-25",
-                  "duration": 200
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1980-03-25\",\n" +
+                      "\"duration\": 200\n" +
+                      "}";
 
         assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
@@ -55,11 +55,11 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithoutReleaseDateShouldCauseException() {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "duration": 200
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"duration\": 200\n" +
+                      "}";
 
         assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
@@ -69,11 +69,11 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithoutDurationShouldCauseException() {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "releaseDate": "1980-03-25"
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1980-03-25\"\n" +
+                      "}";
 
         assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
@@ -83,11 +83,11 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithoutDescriptionShouldReturnOkStatusCode() throws Exception {
-        String body = """
-                {"name": "Test",
-                  "releaseDate": "1980-03-25",
-                  "duration": 200
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"releaseDate\": \"1980-03-25\",\n" +
+                      "\"duration\": 200\n" +
+                      "}";
 
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
@@ -98,12 +98,12 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithNotANumberDurationShouldThrowBadRequest() throws Exception {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "releaseDate": "1980-03-25",
-                  "duration": "NotANumber"
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1980-03-25\",\n" +
+                      "\"duration\": \"NotANumber\"\n" +
+                      "}";
 
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
@@ -113,12 +113,12 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmWithNegativeDurationShouldThrowException() {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "releaseDate": "1980-03-25",
-                  "duration": -9999
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1980-03-25\",\n" +
+                      "\"duration\": -9999\n" +
+                      "}";
 
         assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
@@ -128,12 +128,12 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmRecordBeforeFirstMovieCreationShouldThrowException() {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "releaseDate": "1780-03-25",
-                  "duration": 100
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1780-03-25\",\n" +
+                      "\"duration\": 100\n" +
+                      "}";
 
         assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
@@ -143,12 +143,12 @@ public class FilmControllerTest {
 
     @Test
     public void creatingFilmRecordOfFirstMovieShouldReturnOkStatusCode() throws Exception {
-        String body = """
-                {"name": "Test",
-                  "description": "Description",
-                  "releaseDate": "1895-12-28",
-                  "duration": 100
-                }""";
+        String body = "{\n" +
+                      "\"name\": \"Test\",\n" +
+                      "\"description\": \"Description\",\n" +
+                      "\"releaseDate\": \"1895-12-28\",\n" +
+                      "\"duration\": 100\n" +
+                      "}";
 
 
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
