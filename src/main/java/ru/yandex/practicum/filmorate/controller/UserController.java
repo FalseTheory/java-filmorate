@@ -41,13 +41,14 @@ public class UserController {
             if (user.getName() == null || user.getName().isBlank()) {
                 user.setName(user.getLogin());
             }
-        } catch (Exception e) {
+        } catch (ValidationException e) {
             log.error("error while trying to validate request body: ", e);
             throw new RuntimeException(e);
         }
         log.trace("calculating new id");
         user.setId(getNextId());
         users.put(user.getId(), user);
+        log.info("Successfully created user - {}", user);
 
         return user;
 

@@ -37,14 +37,14 @@ public class FilmController {
             if (film.getDescription() != null && film.getDescription().length() > 200) {
                 throw new ValidationException("Описание фильма не может быть свыше 200 символов");
             }
-            if (film.getReleaseDate() != null &&
+            if (film.getReleaseDate() == null ||
                     film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
                 throw new ValidationException("Дата релиза не может быть раньше 28 декабря 1895 года");
             }
             if (film.getDuration() < 1) {
                 throw new ValidationException("Продолжительность фильма должна быть положительным числом");
             }
-        } catch (Exception e) {
+        } catch (ValidationException e) {
             log.error("error while trying to validate request body: ", e);
             throw new RuntimeException(e);
         }
