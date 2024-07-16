@@ -44,8 +44,7 @@ public class UserControllerTest {
     @Test
     public void updatingUserWithNotANumberIdShouldThrowBadRequest() throws Exception {
         String bodyPut = """
-                {
-                  "login": "doloreUpdate",
+                {"login": "doloreUpdate",
                   "name": "est adipisicing",
                   "id": "notANumber",
                   "email": "mail@yandex.ru",
@@ -60,8 +59,7 @@ public class UserControllerTest {
     @Test
     public void creatingUserWithFutureBirthdayShouldThrowValidationException() {
         String bodyPost = """
-                {
-                  "login": "doloreUpdate",
+                {"login": "doloreUpdate",
                   "name": "est adipisicing",
                   "email": "mail@yandex.ru",
                   "birthday": "2028-09-20"

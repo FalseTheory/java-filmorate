@@ -41,8 +41,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithoutNameShouldCauseException() {
         String body = """
-                {
-                  "name": "",
+                {"name": "",
                   "description": "Description",
                   "releaseDate": "1980-03-25",
                   "duration": 200
@@ -57,8 +56,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithoutReleaseDateShouldCauseException() {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "duration": 200
                 }""";
@@ -72,8 +70,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithoutDurationShouldCauseException() {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "releaseDate": "1980-03-25"
                 }""";
@@ -87,8 +84,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithoutDescriptionShouldReturnOkStatusCode() throws Exception {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "releaseDate": "1980-03-25",
                   "duration": 200
                 }""";
@@ -103,8 +99,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithNotANumberDurationShouldThrowBadRequest() throws Exception {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "releaseDate": "1980-03-25",
                   "duration": "NotANumber"
@@ -119,8 +114,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmWithNegativeDurationShouldThrowException() {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "releaseDate": "1980-03-25",
                   "duration": -9999
@@ -135,8 +129,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmRecordBeforeFirstMovieCreationShouldThrowException() {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "releaseDate": "1780-03-25",
                   "duration": 100
@@ -151,8 +144,7 @@ public class FilmControllerTest {
     @Test
     public void creatingFilmRecordOfFirstMovieShouldReturnOkStatusCode() throws Exception {
         String body = """
-                {
-                  "name": "Test",
+                {"name": "Test",
                   "description": "Description",
                   "releaseDate": "1895-12-28",
                   "duration": 100
