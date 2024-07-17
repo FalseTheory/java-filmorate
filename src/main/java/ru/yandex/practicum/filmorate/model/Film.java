@@ -25,7 +25,7 @@ public class Film {
 
 
     @AssertFalse(message = "Дата выпуска фильма должна быть не раньше 1895-12-28")
-    public boolean isValidReleaseDate(){
+    public boolean isValidReleaseDate() {
         return releaseDate.isBefore(LocalDate.of(1895, 12, 28));
     }
 

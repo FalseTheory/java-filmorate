@@ -25,7 +25,7 @@ public class User {
     LocalDate birthday;
 
     @AssertFalse(message = "Логин не может содержать пробелы")
-    public boolean isLoginValid(){
+    public boolean isLoginValid() {
         return login.contains(" ");
     }
 }
