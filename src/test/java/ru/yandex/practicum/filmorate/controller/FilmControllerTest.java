@@ -39,7 +39,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void creatingFilmWithoutNameShouldCauseException() {
+    public void creatingFilmWithoutNameShouldCauseException() throws Exception {
         String body = "{\n" +
                       "\"name\": \"\",\n" +
                       "\"description\": \"Description\",\n" +
@@ -47,8 +47,10 @@ public class FilmControllerTest {
                       "\"duration\": 200\n" +
                       "}";
 
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+
+        assertEquals(400, res.getResponse().getStatus());
 
 
     }
@@ -68,15 +70,18 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void creatingFilmWithoutDurationShouldCauseException() {
+    public void creatingFilmWithoutDurationShouldCauseException() throws Exception {
         String body = "{\n" +
                       "\"name\": \"Test\",\n" +
                       "\"description\": \"Description\",\n" +
                       "\"releaseDate\": \"1980-03-25\"\n" +
                       "}";
 
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+
+
+        assertEquals(400, res.getResponse().getStatus());
 
 
     }
@@ -112,7 +117,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void creatingFilmWithNegativeDurationShouldThrowException() {
+    public void creatingFilmWithNegativeDurationShouldThrowException() throws Exception {
         String body = "{\n" +
                       "\"name\": \"Test\",\n" +
                       "\"description\": \"Description\",\n" +
@@ -120,14 +125,17 @@ public class FilmControllerTest {
                       "\"duration\": -9999\n" +
                       "}";
 
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+
+
+        assertEquals(400, res.getResponse().getStatus());
 
 
     }
 
     @Test
-    public void creatingFilmRecordBeforeFirstMovieCreationShouldThrowException() {
+    public void creatingFilmRecordBeforeFirstMovieCreationShouldThrowException() throws Exception {
         String body = "{\n" +
                       "\"name\": \"Test\",\n" +
                       "\"description\": \"Description\",\n" +
@@ -135,8 +143,11 @@ public class FilmControllerTest {
                       "\"duration\": 100\n" +
                       "}";
 
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
+
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+
+        assertEquals(400, res.getResponse().getStatus());
 
 
     }

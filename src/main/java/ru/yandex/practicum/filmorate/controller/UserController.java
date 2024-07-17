@@ -3,13 +3,13 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.validators.OnUpdate;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +19,8 @@ import java.util.Map;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
+    private Long idCount = 0L;
 
     Map<Long, User> users = new HashMap<>();
 
@@ -31,22 +33,12 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
         log.info("trying to create new user record");
         log.debug("parsed user record - {}", user);
-        try {
-            if (user.getLogin().contains(" ")) {
-                throw new ValidationException("Логин не может содержать пробелов");
-            }
-            if (user.getBirthday().isAfter(LocalDate.now())) {
-                throw new ValidationException("День рождения не может быть в будущем");
-            }
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
-        } catch (ValidationException e) {
-            log.error("error while trying to validate request body: ", e);
-            throw new RuntimeException(e);
+
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
         }
         log.trace("calculating new id");
-        user.setId(getNextId());
+        user.setId(++idCount);
         users.put(user.getId(), user);
         log.info("Successfully created user - {}", user);
 
@@ -55,51 +47,32 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@Valid @RequestBody User newUser) {
+    public User update(@Validated(OnUpdate.class) @RequestBody User newUser) {
         log.info("trying to update user record");
-        try {
-            if (newUser.getId() == null) {
-                throw new ConditionsNotMetException("id должен быть указан");
-            }
-            log.debug("updating user with id - {}", newUser.getId());
-            if (users.containsKey(newUser.getId())) {
-                User oldUser = users.get(newUser.getId());
-                log.debug("old user record - {}", oldUser);
-                log.debug("new user record - {}", newUser);
-                for (User u : users.values()) {
-                    if (newUser.getEmail().equals(u.getEmail())) {
-                        throw new ConditionsNotMetException("Этот email уже используется");
-                    }
-                }
-                oldUser.setEmail(newUser.getEmail());
-                oldUser.setLogin(newUser.getLogin());
-                if (newUser.getName() != null && !newUser.getName().isBlank()) {
-                    oldUser.setName(newUser.getName());
-                } else {
-                    oldUser.setName(oldUser.getLogin());
-                }
-                if (newUser.getBirthday().isAfter(LocalDate.now())) {
-                    throw new ValidationException("День рождения не может быть в будущем");
-                }
-                oldUser.setBirthday(newUser.getBirthday());
-                log.debug("resulted user record - {}", oldUser);
-                log.info("user with id - {} updated successfully", oldUser.getId());
-                return oldUser;
-            }
+
+        log.debug("updating user with id - {}", newUser.getId());
+        User oldUser = users.getOrDefault(newUser.getId(), null);
+        if (oldUser == null) {
             throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
-        } catch (Exception e) {
-            log.error("error while trying to update user record: ", e);
-            throw new RuntimeException(e);
         }
+        log.debug("old user record - {}", oldUser);
+        log.debug("new user record - {}", newUser);
+        for (User u : users.values()) {
+            if (newUser.getEmail().equals(u.getEmail())) {
+                throw new ConditionsNotMetException("Этот email уже используется");
+            }
+        }
+        oldUser.setEmail(newUser.getEmail());
+        oldUser.setLogin(newUser.getLogin());
+        oldUser.setBirthday(newUser.getBirthday());
+        oldUser.setName(newUser.getName());
+
+        log.debug("resulted user record - {}", oldUser);
+        log.info("user with id - {} updated successfully", oldUser.getId());
+
+        return oldUser;
+
 
     }
 
-    private Long getNextId() {
-        long currentLastId = users.keySet().stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        log.trace("{} is next available id", currentLastId + 1);
-        return ++currentLastId;
-    }
 }

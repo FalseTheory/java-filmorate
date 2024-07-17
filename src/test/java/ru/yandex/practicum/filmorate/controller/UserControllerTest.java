@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.servlet.ServletException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +30,7 @@ public class UserControllerTest {
     void contextLoads() {
     }
 
+    @DisplayName("POST запрос с пустым телом должен выбрасывать ошибку 400")
     @Test
     public void creatingUserWithEmptyBodyShouldThrowBadRequest() throws Exception {
 
@@ -41,6 +42,7 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("Попытка обновить пользователя с некорректным id должно выдавать код 400")
     @Test
     public void updatingUserWithNotANumberIdShouldThrowBadRequest() throws Exception {
         String bodyPut = "{\n" +
@@ -57,8 +59,9 @@ public class UserControllerTest {
         assertEquals(400, result.getResponse().getStatus());
     }
 
+    @DisplayName("Создание пользователя с днём рождения в будущем должно выдавать ошибку")
     @Test
-    public void creatingUserWithFutureBirthdayShouldThrowValidationException() {
+    public void creatingUserWithFutureBirthdayShouldThrowValidationException() throws Exception {
         String bodyPost = "{\n" +
                           "\"login\": \"doloreUpdate\",\n" +
                           "\"name\": \"est adipisicing\",\n" +
@@ -66,11 +69,45 @@ public class UserControllerTest {
                           "\"birthday\": \"2028-09-20\"\n" +
                           "}";
 
-        // Ошибка валидации выкидывается, но не понимаю как проверить именно её, servletException выкидывается первой
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn());
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        assertEquals(400, result.getResponse().getStatus());
 
 
+    }
+
+    @DisplayName("Создание пользователя с некорректным email должно приводить к ошибке")
+    @Test
+    public void creatingUserWithIncorrectEmailPatternShouldResultInError() throws Exception {
+        String bodyPost = "{\n" +
+                          "\"login\": \"doloreUpdate\",\n" +
+                          "\"name\": \"est adipisicing\",\n" +
+                          "\"email\": \"@mailyandex.ru\",\n" +
+                          "\"birthday\": \"2020-09-20\"\n" +
+                          "}";
+
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        assertEquals(400, result.getResponse().getStatus());
+    }
+
+    @DisplayName("Создание пользователя с некорректным логином должно приводить к ошибке")
+    @Test
+    public void creatingUserWithIncorrectLoginShouldResultInError() throws Exception {
+        String bodyPost = "{\n" +
+                          "\"login\": \"dolore   Update\",\n" +
+                          "\"name\": \"est adipisicing\",\n" +
+                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"birthday\": \"2020-09-20\"\n" +
+                          "}";
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        assertEquals(400, result.getResponse().getStatus());
     }
 
 }
