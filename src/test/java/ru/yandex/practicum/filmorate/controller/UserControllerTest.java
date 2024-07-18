@@ -110,4 +110,82 @@ public class UserControllerTest {
         assertEquals(400, result.getResponse().getStatus());
     }
 
+    @Test
+    @DisplayName("Обновление пользователя с неправильным email должно быть невозможно")
+    public void updatingUserWithWrongEmailShouldReturnError() throws Exception {
+        String bodyPost = "{\n" +
+                          "\"login\": \"doloreUpdate\",\n" +
+                          "\"name\": \"est adipisicing\",\n" +
+                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"birthday\": \"2020-09-20\"\n" +
+                          "}";
+        String bodyPut = "{\n" +
+                         "\"id\": \"1\",\n" +
+                         "\"login\": \"doloreUpdate\",\n" +
+                         "\"name\": \"est adipisicing\",\n" +
+                         "\"email\": \"mailyandex.ru\",\n" +
+                         "\"birthday\": \"2020-10-20\"\n" +
+                         "}";
+
+        mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPut)).andReturn();
+
+        assertEquals(400, result.getResponse().getStatus());
+    }
+
+    @Test
+    @DisplayName("Обновление c тем же email должно возвращать статус код 200")
+    public void updatingUserWithSameEmailShouldReturnOkStatusCode() throws Exception {
+        String bodyPost = "{\n" +
+                          "\"login\": \"doloreUpdate\",\n" +
+                          "\"name\": \"est adipisicing\",\n" +
+                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"birthday\": \"2020-09-20\"\n" +
+                          "}";
+        String bodyPut = "{\n" +
+                         "\"id\": \"1\",\n" +
+                         "\"login\": \"doloreUpdate\",\n" +
+                         "\"name\": \"est adipisicing\",\n" +
+                         "\"email\": \"mail@yandex.ru\",\n" +
+                         "\"birthday\": \"2020-10-20\"\n" +
+                         "}";
+
+        mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPut)).andReturn();
+
+        assertEquals(200, result.getResponse().getStatus());
+    }
+
+    @Test
+    @DisplayName("Обновление без email должно возвращать статус код 200")
+    public void updatingUserWithoutEmailShouldReturnOkStatusCode() throws Exception {
+        String bodyPost = "{\n" +
+                          "\"login\": \"doloreUpdate\",\n" +
+                          "\"name\": \"est adipisicing\",\n" +
+                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"birthday\": \"2020-09-20\"\n" +
+                          "}";
+        String bodyPut = "{\n" +
+                         "\"id\": \"1\",\n" +
+                         "\"login\": \"doloreUpdate\",\n" +
+                         "\"name\": \"est adipisicing\",\n" +
+                         "\"birthday\": \"2020-10-20\"\n" +
+                         "}";
+
+        mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPost)).andReturn();
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON).content(bodyPut)).andReturn();
+
+        assertEquals(200, result.getResponse().getStatus());
+    }
+
+
 }

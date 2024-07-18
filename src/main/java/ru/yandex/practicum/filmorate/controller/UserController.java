@@ -10,9 +10,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.OnUpdate;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -23,6 +21,9 @@ public class UserController {
     private Long idCount = 0L;
 
     Map<Long, User> users = new HashMap<>();
+
+    Set<String> userMails = new HashSet<>();
+
 
     @GetMapping
     public Collection<User> findAll() {
@@ -37,10 +38,14 @@ public class UserController {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+        if (!userMails.add(user.getEmail())) {
+            throw new ConditionsNotMetException("Этот email уже используется");
+        }
         log.trace("calculating new id");
         user.setId(++idCount);
         users.put(user.getId(), user);
         log.info("Successfully created user - {}", user);
+
 
         return user;
 
@@ -51,18 +56,20 @@ public class UserController {
         log.info("trying to update user record");
 
         log.debug("updating user with id - {}", newUser.getId());
-        User oldUser = users.getOrDefault(newUser.getId(), null);
+        User oldUser = users.get(newUser.getId());
         if (oldUser == null) {
             throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
         }
         log.debug("old user record - {}", oldUser);
         log.debug("new user record - {}", newUser);
-        for (User u : users.values()) {
-            if (newUser.getEmail().equals(u.getEmail())) {
+
+        if (!oldUser.getEmail().equals(newUser.getEmail())) {
+            if (!userMails.add(newUser.getEmail())) {
                 throw new ConditionsNotMetException("Этот email уже используется");
             }
+            userMails.remove(oldUser.getEmail());
+            oldUser.setEmail(newUser.getEmail());
         }
-        oldUser.setEmail(newUser.getEmail());
         oldUser.setLogin(newUser.getLogin());
         oldUser.setBirthday(newUser.getBirthday());
         oldUser.setName(newUser.getName());

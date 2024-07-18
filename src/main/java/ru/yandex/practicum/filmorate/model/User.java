@@ -15,6 +15,7 @@ public class User {
     Long id;
     @NotBlank
     @Email(message = "email должен быть корректным")
+    @Email(groups = OnUpdate.class, message = "email должен быть корректным")
     String email;
     @NotNull
     @NotBlank

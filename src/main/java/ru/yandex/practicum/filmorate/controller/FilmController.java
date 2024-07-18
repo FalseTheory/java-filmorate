@@ -41,7 +41,7 @@ public class FilmController {
     public Film update(@Validated(OnUpdate.class) @RequestBody Film newFilm) {
         log.info("trying to update film record");
         log.debug("updating film with id-{}", newFilm.getId());
-        Film oldFilm = films.getOrDefault(newFilm.getId(), null);
+        Film oldFilm = films.get(newFilm.getId());
         if (oldFilm == null) {
             throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
         }
