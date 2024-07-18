@@ -116,7 +116,7 @@ public class UserControllerTest {
         String bodyPost = "{\n" +
                           "\"login\": \"doloreUpdate\",\n" +
                           "\"name\": \"est adipisicing\",\n" +
-                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"email\": \"mail@mail.ru\",\n" +
                           "\"birthday\": \"2020-09-20\"\n" +
                           "}";
         String bodyPut = "{\n" +
@@ -168,11 +168,11 @@ public class UserControllerTest {
         String bodyPost = "{\n" +
                           "\"login\": \"doloreUpdate\",\n" +
                           "\"name\": \"est adipisicing\",\n" +
-                          "\"email\": \"mail@yandex.ru\",\n" +
+                          "\"email\": \"mail@gmail.ru\",\n" +
                           "\"birthday\": \"2020-09-20\"\n" +
                           "}";
         String bodyPut = "{\n" +
-                         "\"id\": \"1\",\n" +
+                         "\"id\": \"2\",\n" +
                          "\"login\": \"doloreUpdate\",\n" +
                          "\"name\": \"est adipisicing\",\n" +
                          "\"birthday\": \"2020-10-20\"\n" +
