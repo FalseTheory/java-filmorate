@@ -16,7 +16,6 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 public class ErrorHandler {
 
 
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ErrorResponse handleConditionsNotMetException(final ConditionsNotMetException e) {
@@ -37,6 +36,7 @@ public class ErrorHandler {
         log.info("Validation exception {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final MethodArgumentNotValidException e) {

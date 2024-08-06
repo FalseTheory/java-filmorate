@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.user.UserRepository;
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BaseUserService implements UserService{
+public class BaseUserService implements UserService {
 
     private final UserRepository userRepository;
 
@@ -42,7 +41,8 @@ public class BaseUserService implements UserService{
         User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new NotFoundException("User not found with " + friendId));
 
-        userRepository.addFriend(userId, friendId);
+
+        userRepository.addFriend(user.getId(), friend.getId());
 
     }
 
@@ -50,8 +50,10 @@ public class BaseUserService implements UserService{
     public void deleteFriend(long userId, long friendId) {
         User user = userRepository.get(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with " + userId));
+        User friend = userRepository.get(friendId)
+                .orElseThrow(() -> new NotFoundException("User not found with " + friendId));
 
-        userRepository.deleteFriend(userId, friendId);
+        userRepository.deleteFriend(user.getId(), friend.getId());
     }
 
     @Override
@@ -61,6 +63,21 @@ public class BaseUserService implements UserService{
 
     @Override
     public List<User> getFriendsList(long userId) {
-        return userRepository.returnFriendsList(userId);
+        User user = userRepository.get(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with " + userId));
+
+        return userRepository.returnFriendsList(user.getId());
+    }
+
+    @Override
+    public List<User> getCommonFriends(long userId, long otherId) {
+
+        User user = userRepository.get(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with " + userId));
+        User other = userRepository.get(otherId)
+                .orElseThrow(() -> new NotFoundException("User not found with " + otherId));
+
+        return userRepository.returnCommonFriends(user.getId(), other.getId());
+
     }
 }

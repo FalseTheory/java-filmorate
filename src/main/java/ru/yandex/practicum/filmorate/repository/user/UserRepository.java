@@ -22,6 +22,7 @@ public interface UserRepository {
 
     List<User> returnFriendsList(long userId);
 
+    List<User> returnCommonFriends(long userId, long otherId);
 
 
 }

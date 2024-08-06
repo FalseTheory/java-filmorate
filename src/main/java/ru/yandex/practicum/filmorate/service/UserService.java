@@ -13,13 +13,15 @@ public interface UserService {
 
     User update(User newUser);
 
-    void addFriend(long UserId, long friendId);
+    void addFriend(long userId, long friendId);
 
     void deleteFriend(long userId, long friendId);
 
     Collection<User> findAll();
 
     List<User> getFriendsList(long userId);
+
+    List<User> getCommonFriends(long userId, long otherId);
 
 
 }

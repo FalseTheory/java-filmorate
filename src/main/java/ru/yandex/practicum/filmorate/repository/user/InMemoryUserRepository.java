@@ -28,7 +28,7 @@ public class InMemoryUserRepository implements UserRepository {
             throw new ConditionsNotMetException("Этот email уже используется");
         }
         user.setId(++idCount);
-        users.put(user.getId(),user);
+        users.put(user.getId(), user);
         friendsLists.put(user.getId(), new HashSet<>());
 
         return user;
@@ -59,7 +59,6 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
 
-
     @Override
     public Collection<User> getAll() {
         return users.values();
@@ -69,8 +68,10 @@ public class InMemoryUserRepository implements UserRepository {
     public void addFriend(long userId, long friendId) {
 
         friendsLists.get(userId).add(friendId);
+        friendsLists.get(friendId).add(userId);
 
     }
+
     @Override
     public List<User> returnFriendsList(long userId) {
 
@@ -80,8 +81,19 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public List<User> returnCommonFriends(long userId, long otherId) {
+
+        return friendsLists.get(userId)
+                .stream()
+                .filter(id -> friendsLists.get(otherId).contains(id))
+                .map(id -> users.get(id))
+                .toList();
+    }
+
+    @Override
     public void deleteFriend(long userId, long friendId) {
         friendsLists.get(userId).remove(friendId);
+        friendsLists.get(friendId).remove(userId);
     }
 
 

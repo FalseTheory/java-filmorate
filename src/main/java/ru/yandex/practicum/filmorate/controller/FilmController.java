@@ -19,7 +19,6 @@ import java.util.List;
 public class FilmController {
 
 
-
     private final FilmService filmService;
 
 
@@ -42,6 +41,7 @@ public class FilmController {
     public void putLike(@PathVariable Long filmId, @PathVariable Long userId) {
         filmService.putUserLike(filmId, userId);
     }
+
     @DeleteMapping("/{filmId}/like/{userId}")
     public void deleteLike(@PathVariable Long filmId, @PathVariable Long userId) {
         filmService.deleteUserLike(filmId, userId);

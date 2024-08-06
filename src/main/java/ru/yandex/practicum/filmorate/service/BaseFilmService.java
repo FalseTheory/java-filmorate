@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BaseFilmService implements FilmService{
+public class BaseFilmService implements FilmService {
 
 
     private final FilmRepository filmRepository;
@@ -70,6 +70,9 @@ public class BaseFilmService implements FilmService{
         Film film = filmRepository.get(filmId)
                 .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
 
-        filmRepository.deleteUserLike(film.getId(), userId);
+        User user = userRepository.get(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+
+        filmRepository.deleteUserLike(film.getId(), user.getId());
     }
 }
