@@ -11,6 +11,7 @@ import java.time.LocalDate;
  */
 @Data
 public class User {
+
     @NotNull(groups = OnUpdate.class, message = "id должен быть указан")
     Long id;
     @NotBlank
