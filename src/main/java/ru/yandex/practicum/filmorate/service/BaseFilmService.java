@@ -27,7 +27,7 @@ public class BaseFilmService implements FilmService {
     @Override
     public Film get(long filmId) {
         return filmRepository.get(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Film with id = " + filmId + " not found"));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BaseFilmService implements FilmService {
     public Film update(Film newFilm) {
 
         Film oldFilm = filmRepository.get(newFilm.getId())
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Film with id = " + newFilm.getId() + " not found"));
 
         oldFilm.setName(newFilm.getName());
         oldFilm.setDescription(newFilm.getDescription());
@@ -58,9 +58,9 @@ public class BaseFilmService implements FilmService {
     @Override
     public void putUserLike(long filmId, long userId) {
         User user = userRepository.get(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found"));
         Film film = filmRepository.get(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Film with id = " + filmId + " not found"));
         filmRepository.addUserLike(film.getId(), user.getId());
     }
 
@@ -68,10 +68,10 @@ public class BaseFilmService implements FilmService {
     public void deleteUserLike(long filmId, long userId) {
 
         Film film = filmRepository.get(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Film with id = " + filmId + " not found"));
 
         User user = userRepository.get(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found"));
 
         filmRepository.deleteUserLike(film.getId(), user.getId());
     }
