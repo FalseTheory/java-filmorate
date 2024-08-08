@@ -13,7 +13,7 @@ public interface FilmService {
 
     Film save(Film film);
 
-    Film update(Film newFilm);
+    Film update(Film film);
 
     List<Film> getPopularFilms(int count);
 

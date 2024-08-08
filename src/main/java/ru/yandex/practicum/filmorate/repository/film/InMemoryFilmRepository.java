@@ -23,8 +23,13 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     @Override
-    public Film update(Film film) {
-        return null;
+    public void update(Film film) {
+        Film oldFilm = films.get(film.getId());
+
+        oldFilm.setName(film.getName());
+        oldFilm.setDescription(film.getDescription());
+        oldFilm.setReleaseDate(film.getReleaseDate());
+        oldFilm.setDuration(film.getDuration());
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface UserService {
 
     User save(User user);
 
-    User update(User newUser);
+    User update(User user);
 
     void addFriend(long userId, long friendId);
 

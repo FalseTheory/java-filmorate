@@ -24,14 +24,21 @@ public class BaseUserService implements UserService {
     @Override
     public User save(User user) {
 
-        userRepository.create(user);
-        return user;
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        return userRepository.create(user);
+
     }
 
     @Override
-    public User update(User newUser) {
+    public User update(User user) {
 
-        return userRepository.update(newUser);
+        User oldUser = userRepository.get(user.getId())
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + user.getId() + " не найден"));
+
+        userRepository.update(user);
+        return oldUser;
     }
 
     @Override

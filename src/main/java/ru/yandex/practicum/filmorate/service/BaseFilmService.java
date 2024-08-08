@@ -36,16 +36,12 @@ public class BaseFilmService implements FilmService {
     }
 
     @Override
-    public Film update(Film newFilm) {
+    public Film update(Film film) {
 
-        Film oldFilm = filmRepository.get(newFilm.getId())
-                .orElseThrow(() -> new NotFoundException("Film with id = " + newFilm.getId() + " not found"));
+        Film oldFilm = filmRepository.get(film.getId())
+                .orElseThrow(() -> new NotFoundException("Film with id = " + film.getId() + " not found"));
 
-        oldFilm.setName(newFilm.getName());
-        oldFilm.setDescription(newFilm.getDescription());
-        oldFilm.setReleaseDate(newFilm.getReleaseDate());
-        oldFilm.setDuration(newFilm.getDuration());
-
+        filmRepository.update(film);
 
         return oldFilm;
     }

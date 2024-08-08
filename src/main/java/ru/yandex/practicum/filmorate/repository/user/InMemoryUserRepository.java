@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.repository.user;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserRepository implements UserRepository {
@@ -21,9 +21,6 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User create(User user) {
 
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
         if (!userMails.add(user.getEmail())) {
             throw new ConditionsNotMetException("Этот email уже используется");
         }
@@ -35,22 +32,21 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User update(User newUser) {
-        User oldUser = users.get(newUser.getId());
-        if (oldUser == null) {
-            throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
-        }
-        if (!oldUser.getEmail().equals(newUser.getEmail())) {
-            if (!userMails.add(newUser.getEmail())) {
+    public void update(User user) {
+
+        User oldUser = users.get(user.getId());
+
+        if (!oldUser.getEmail().equals(user.getEmail())) {
+            if (!userMails.add(user.getEmail())) {
                 throw new ConditionsNotMetException("Этот email уже используется");
             }
             userMails.remove(oldUser.getEmail());
-            oldUser.setEmail(newUser.getEmail());
+            oldUser.setEmail(user.getEmail());
         }
-        oldUser.setLogin(newUser.getLogin());
-        oldUser.setBirthday(newUser.getBirthday());
-        oldUser.setName(newUser.getName());
-        return oldUser;
+        oldUser.setLogin(user.getLogin());
+        oldUser.setBirthday(user.getBirthday());
+        oldUser.setName(user.getName());
+
     }
 
     @Override
@@ -75,9 +71,9 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> returnFriendsList(long userId) {
 
-        return users.values().stream()
-                .filter(user -> friendsLists.get(userId).contains(user.getId()))
-                .toList();
+        return friendsLists.get(userId).stream()
+                .map(users::get)
+                .collect(Collectors.toList());
     }
 
     @Override
