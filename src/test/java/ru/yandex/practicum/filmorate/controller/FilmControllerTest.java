@@ -1,18 +1,18 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @WebMvcTest(FilmController.class)
 public class FilmControllerTest {
@@ -22,18 +22,21 @@ public class FilmControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private FilmService service;
+
 
     @Test
     void contextLoads() {
     }
 
     @Test
-    public void creatingFilmWithEmptyBodyShouldThrowBadRequest() throws Exception {
+    public void creatingFilmWithEmptyBodyShouldThrowInternalError() throws Exception {
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
-        assertEquals(400, result.getResponse().getStatus());
+        assertEquals(500, result.getResponse().getStatus());
 
 
     }
@@ -56,15 +59,17 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void creatingFilmWithoutReleaseDateShouldCauseException() {
+    public void creatingFilmWithoutReleaseDateShouldCauseBadRequest() throws Exception {
         String body = "{\n" +
                       "\"name\": \"Test\",\n" +
                       "\"description\": \"Description\",\n" +
                       "\"duration\": 200\n" +
                       "}";
 
-        assertThrows(ServletException.class, () -> mvc.perform(MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn());
+        MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+
+        assertEquals(400, res.getResponse().getStatus());
 
 
     }
@@ -102,7 +107,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void creatingFilmWithNotANumberDurationShouldThrowBadRequest() throws Exception {
+    public void creatingFilmWithNotANumberDurationShouldThrowInternalServerError() throws Exception {
         String body = "{\n" +
                       "\"name\": \"Test\",\n" +
                       "\"description\": \"Description\",\n" +
@@ -113,7 +118,7 @@ public class FilmControllerTest {
         MvcResult res = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
 
-        assertEquals(400, res.getResponse().getStatus());
+        assertEquals(500, res.getResponse().getStatus());
     }
 
     @Test

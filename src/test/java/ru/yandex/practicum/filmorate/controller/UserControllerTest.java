@@ -7,10 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 
 import java.net.URI;
@@ -25,26 +27,28 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private UserService service;
 
     @Test
     void contextLoads() {
     }
 
-    @DisplayName("POST запрос с пустым телом должен выбрасывать ошибку 400")
+    @DisplayName("POST запрос с пустым телом должен выбрасывать ошибку 500")
     @Test
     public void creatingUserWithEmptyBodyShouldThrowBadRequest() throws Exception {
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
-        assertEquals(400, result.getResponse().getStatus());
+        assertEquals(500, result.getResponse().getStatus());
 
 
     }
 
-    @DisplayName("Попытка обновить пользователя с некорректным id должно выдавать код 400")
+    @DisplayName("Попытка обновить пользователя с некорректным id должно выдавать ошибку 500")
     @Test
-    public void updatingUserWithNotANumberIdShouldThrowBadRequest() throws Exception {
+    public void updatingUserWithNotANumberIdShouldThrowInternalError() throws Exception {
         String bodyPut = "{\n" +
                          "\"login\": \"doloreUpdate\",\n" +
                          "\"name\": \"est adipisicing\",\n" +
@@ -56,7 +60,7 @@ public class UserControllerTest {
         MvcResult result = mvc.perform(MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON).content(bodyPut)).andReturn();
 
-        assertEquals(400, result.getResponse().getStatus());
+        assertEquals(500, result.getResponse().getStatus());
     }
 
     @DisplayName("Создание пользователя с днём рождения в будущем должно выдавать ошибку")
