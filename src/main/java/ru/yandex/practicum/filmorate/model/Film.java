@@ -22,6 +22,7 @@ public class Film {
     LocalDate releaseDate;
     @DecimalMin(value = "1", message = "Длительность фильма должна быть представлена положительным числом")
     int duration;
+    MPARatings rating;
 
 
     @AssertFalse(message = "Дата выпуска фильма должна быть не раньше 1895-12-28")

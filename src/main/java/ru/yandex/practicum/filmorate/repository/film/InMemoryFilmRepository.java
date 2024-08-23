@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Component("inMemoryFilmRepository")
 public class InMemoryFilmRepository implements FilmRepository {
 
     private Long idCount = 0L;
