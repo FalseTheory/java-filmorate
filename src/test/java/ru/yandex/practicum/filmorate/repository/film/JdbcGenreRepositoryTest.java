@@ -35,7 +35,7 @@ class JdbcGenreRepositoryTest {
 
 
     @Test
-    @DisplayName("Список жанров должен корректно возвращаться по их id")
+    @DisplayName(" жанр должен корректно возвращаться по их id")
     void should_correctly_return_genres_by_ids() {
         Optional<Genre> genreOpt = genreRepository.getById(1L);
 
@@ -47,10 +47,19 @@ class JdbcGenreRepositoryTest {
     }
 
     @Test
-    @DisplayName("Жанр по id фильма должен корректно возвращаться")
+    @DisplayName("Список Жанров по id фильма должен корректно возвращаться")
     void should_correctly_return_genre_by_id() {
 
         List<Genre> genreList = genreRepository.getByFilmId(1L);
+
+        assertThat(genreList)
+                .usingRecursiveComparison()
+                .isEqualTo(getTestGenreList());
+    }
+    @Test
+    @DisplayName("Список всех жанров должен корректно возвращаться")
+    void should_correctly_return_genres_list() {
+        List<Genre> genreList = genreRepository.getAll();
 
         assertThat(genreList)
                 .usingRecursiveComparison()

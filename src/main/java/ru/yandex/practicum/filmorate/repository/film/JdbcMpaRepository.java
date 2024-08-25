@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.MPA;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +22,7 @@ public class JdbcMpaRepository implements MpaRepository {
 
     private final NamedParameterJdbcOperations jdbc;
     private static final String GET_BY_ID_QUERY = "SELECT * FROM MPA_RATING WHERE \"rating_id\" = :rating_id;";
+    private static final String GET_ALL_QUERY = "SELECT * FROM MPA_RATING";
 
     @Override
     public Optional<MPA> getById(long id) {
@@ -32,6 +34,16 @@ public class JdbcMpaRepository implements MpaRepository {
         } catch (EmptyResultDataAccessException ignored) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<MPA> getAll() {
+        return jdbc.query(GET_ALL_QUERY, new RowMapper<MPA>() {
+            @Override
+            public MPA mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new MPA(rs.getLong("rating_id"), rs.getString("mpa_name"));
+            }
+        });
     }
 
     private class MpaExtractor implements ResultSetExtractor<MPA> {

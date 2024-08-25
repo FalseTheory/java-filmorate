@@ -27,6 +27,7 @@ public class JdbcGenreRepository implements GenreRepository {
                                                                 "WHERE \"genre_id\" IN (\n" +
                                                                 "SELECT \"genre\" FROM FILM_GENRES\n" +
                                                                 "WHERE \"film_id\"=:film_id);";
+    private static final String GET_ALL_QUERY = "SELECT * FROM GENRES";
 
 
     @Override
@@ -54,6 +55,16 @@ public class JdbcGenreRepository implements GenreRepository {
             @Override
             public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Genre(rs.getLong("genre_id"),rs.getString("genre_name"));
+            }
+        });
+    }
+
+    @Override
+    public List<Genre> getAll() {
+        return jdbc.query(GET_ALL_QUERY, new RowMapper<Genre>() {
+            @Override
+            public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Genre(rs.getLong("genre_id"), rs.getString("genre_name"));
             }
         });
     }

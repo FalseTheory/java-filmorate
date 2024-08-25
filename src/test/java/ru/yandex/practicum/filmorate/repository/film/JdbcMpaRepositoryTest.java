@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.MPA;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -25,6 +26,13 @@ class JdbcMpaRepositoryTest {
         MPA mpa = new MPA(1L, "PG");
         return mpa;
     }
+    static List<MPA> getTestMpaList() {
+        MPA mpa = new MPA(2L,"PG-13");
+        return List.of(
+                getTestMpa(),
+                mpa
+                );
+    }
 
     @Test
     @DisplayName("Рейтинг фильма должен возвращаться по его id")
@@ -37,5 +45,15 @@ class JdbcMpaRepositoryTest {
                 .get()
                 .usingRecursiveComparison()
                 .isEqualTo(getTestMpa());
+    }
+
+    @Test
+    @DisplayName("Список всех рейтингов должен корректно возвращаться")
+    void should_correctly_return_all_ratings_list() {
+        List<MPA> mpas = mpaRepository.getAll();
+
+        assertThat(mpas)
+                .usingRecursiveComparison()
+                .isEqualTo(getTestMpaList());
     }
 }

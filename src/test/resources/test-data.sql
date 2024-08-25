@@ -28,3 +28,7 @@ VALUES('film2','description2','2012-01-21',20,1);
 INSERT INTO FILM_GENRES ("film_id", "genre")
 VALUES(2,1);
 
+INSERT INTO MPA_RATING ("mpa_name")
+VALUES('PG-13');
+
+
