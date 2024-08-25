@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.repository.user.JdbcUserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 @Import(JdbcGenreRepository.class)
@@ -23,13 +21,20 @@ class JdbcGenreRepositoryTest {
 
     private final JdbcGenreRepository genreRepository;
 
-    static Genre getTestGenre(){
-        return new Genre(1L,"action");
+    static Genre getTestGenre() {
+        Genre genre = new Genre();
+        genre.setId(1L);
+        genre.setName("action");
+        return genre;
     }
-    static List<Genre> getTestGenreList(){
+
+    static List<Genre> getTestGenreList() {
+        Genre genre = new Genre();
+        genre.setId(2L);
+        genre.setName("horror");
         return List.of(
-                new Genre(1L,"action"),
-                new Genre(2L, "horror")
+                getTestGenre(),
+                genre
         );
     }
 
@@ -56,6 +61,7 @@ class JdbcGenreRepositoryTest {
                 .usingRecursiveComparison()
                 .isEqualTo(getTestGenreList());
     }
+
     @Test
     @DisplayName("Список всех жанров должен корректно возвращаться")
     void should_correctly_return_genres_list() {

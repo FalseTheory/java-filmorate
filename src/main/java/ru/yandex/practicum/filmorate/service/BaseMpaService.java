@@ -22,6 +22,6 @@ public class BaseMpaService implements MpaService {
     @Override
     public MPA get(long id) {
         return mpaRepository.getById(id)
-                .orElseThrow(()->new NotFoundException("MPA with id - " + id + " not found."));
+                .orElseThrow(() -> new NotFoundException("MPA with id - " + id + " not found."));
     }
 }

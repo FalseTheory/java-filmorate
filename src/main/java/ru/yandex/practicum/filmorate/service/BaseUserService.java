@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -38,8 +37,12 @@ public class BaseUserService implements UserService {
         User oldUser = userRepository.get(user.getId())
                 .orElseThrow(() -> new NotFoundException("Пользователь с id = " + user.getId() + " не найден"));
 
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
         userRepository.update(user);
-        return oldUser;
+        return userRepository.get(user.getId())
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + user.getId() + " не найден"));
     }
 
     @Override

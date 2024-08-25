@@ -7,5 +7,6 @@ import java.util.List;
 public interface GenreService {
 
     List<Genre> getAll();
+
     Genre get(long id);
 }

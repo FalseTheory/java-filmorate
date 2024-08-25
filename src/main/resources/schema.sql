@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS films (
-	"id" serial NOT NULL UNIQUE,
+	"id" bigint NOT NULL UNIQUE AUTO_INCREMENT,
 	"name" varchar(255) NOT NULL,
 	"description" varchar(200) NOT NULL,
 	"release_date" date NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS films (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-	"id" serial NOT NULL UNIQUE,
-	"email" varchar(255) NOT NULL,
+	"id" bigint NOT NULL UNIQUE AUTO_INCREMENT,
+	"email" varchar(255) NOT NULL unique,
 	"login" varchar NOT NULL,
 	"name" varchar,
 	"birthday" date NOT NULL,
@@ -18,20 +18,20 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS film_genres (
-	"film_id" serial NOT NULL,
+	"film_id" bigint NOT NULL,
 	"genre" bigint NOT NULL,
 	PRIMARY KEY ("film_id", "genre")
 );
 
 CREATE TABLE IF NOT EXISTS genres (
-	"genre_id" serial NOT NULL unique,
-	"genre_name" varchar(255) NOT NULL,
+	"genre_id" bigint NOT NULL unique AUTO_INCREMENT,
+	"genre_name" varchar(255) NOT NULL unique,
 	PRIMARY KEY ("genre_id")
 );
 
 CREATE TABLE IF NOT EXISTS mpa_rating (
-	"rating_id" serial NOT NULL unique,
-	"mpa_name" varchar(10) NOT NULL,
+	"rating_id" bigint NOT NULL unique AUTO_INCREMENT,
+	"mpa_name" varchar(10) NOT NULL unique,
 	PRIMARY KEY ("rating_id")
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS friends (
 CREATE TABLE IF NOT EXISTS film_likes (
 	"film_id" bigint NOT NULL,
 	"user_id" bigint NOT NULL,
-	PRIMARY KEY ("film_id")
+	PRIMARY KEY ("film_id", "user_id")
 );
 
 ALTER TABLE films ADD CONSTRAINT IF NOT EXISTS "films_fk5" FOREIGN KEY ("rating") REFERENCES mpa_rating("rating_id");

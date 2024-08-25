@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @JdbcTest
@@ -29,34 +28,90 @@ class JdbcUserRepositoryTest {
     static User getTestUser() {
         User user = new User();
         user.setId(1L);
-        user.setBirthday(LocalDate.of(2000,1,20));
+        user.setBirthday(LocalDate.of(2000, 1, 20));
         user.setLogin("user");
         user.setName("name");
         user.setEmail("mail@mail.com");
 
         return user;
     }
-    static List<User> getTestUserList() {
+
+    static User getTestCommonFriend() {
         User user = new User();
         user.setId(2L);
-        user.setBirthday(LocalDate.of(2001,1,20));
+        user.setBirthday(LocalDate.of(2001, 1, 20));
         user.setLogin("user2");
         user.setName("name2");
         user.setEmail("gmail@mail.com");
+        return user;
+    }
+
+    static List<User> getTestUserList() {
+
         return List.of(
                 getTestUser(),
-                user
+                getTestCommonFriend(),
+                getTestOtherFriend()
+        );
+    }
+
+    static User getTestOtherFriend() {
+        User user = new User();
+        user.setId(3L);
+        user.setBirthday(LocalDate.of(2004, 1, 20));
+        user.setLogin("user3");
+        user.setName("name3");
+        user.setEmail("umail@mail.com");
+        return user;
+    }
+
+    static User getTestUserForPost() {
+        User user = new User();
+        user.setBirthday(LocalDate.of(2005, 1, 20));
+        user.setLogin("user4");
+        user.setName("name4");
+        user.setEmail("google@mail.com");
+        return user;
+    }
+
+
+    static List<User> getFirstUserTestFriendsList() {
+        return List.of(
+                getTestCommonFriend(),
+                getTestOtherFriend()
         );
     }
 
     @Test
     @DisplayName("Пользователь должен корректно создаваться")
     void should_correctly_create_user() {
+        userRepository.create(getTestUserForPost());
+
+        User user = getTestUserForPost();
+        user.setId(4L);
+
+        assertThat(userRepository.get(4L))
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .isEqualTo(user);
     }
 
     @Test
     @DisplayName("Пользователь должен корректно обновляться")
     void should_correctly_update_user() {
+        User user = getTestUser();
+        user.setLogin("testTestTEST");
+        user.setName("Anna");
+        user.setEmail("test@test.com");
+
+        userRepository.update(user);
+
+        assertThat(userRepository.get(TEST_USER_ID))
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .isEqualTo(user);
     }
 
     @Test
@@ -83,22 +138,22 @@ class JdbcUserRepositoryTest {
     }
 
     @Test
-    @DisplayName("Добавление в друзья должен корректно обрабатываться")
-    void should_correctly_add_friend_to_user() {
-    }
-
-    @Test
-    @DisplayName("Удаление из друзей должно корректно обрабатываться")
-    void should_correctly_delete_user_friend() {
-    }
-
-    @Test
     @DisplayName("Список друзей пользователя должен корректно возвращаться")
     void should_return_user_friends_list() {
+        List<User> friendsList = userRepository.returnFriendsList(TEST_USER_ID);
+
+        assertThat(friendsList)
+                .usingRecursiveComparison()
+                .isEqualTo(getFirstUserTestFriendsList());
     }
 
     @Test
     @DisplayName("Список общих друзей двух пользователей должен корректно возращаться")
     void should_return_two_users_common_friends_list() {
+        List<User> commonFriendsList = userRepository.returnCommonFriends(TEST_USER_ID, 3L);
+
+        assertThat(commonFriendsList)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(getTestCommonFriend()));
     }
 }

@@ -23,15 +23,20 @@ class JdbcMpaRepositoryTest {
     private final JdbcMpaRepository mpaRepository;
 
     static MPA getTestMpa() {
-        MPA mpa = new MPA(1L, "PG");
+        MPA mpa = new MPA();
+        mpa.setId(1L);
+        mpa.setName("PG");
         return mpa;
     }
+
     static List<MPA> getTestMpaList() {
-        MPA mpa = new MPA(2L,"PG-13");
+        MPA mpa = new MPA();
+        mpa.setId(2L);
+        mpa.setName("PG-13");
         return List.of(
                 getTestMpa(),
                 mpa
-                );
+        );
     }
 
     @Test

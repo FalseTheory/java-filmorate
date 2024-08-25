@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MPA;
 
 import java.sql.ResultSet;
@@ -22,7 +21,8 @@ public class JdbcMpaRepository implements MpaRepository {
 
     private final NamedParameterJdbcOperations jdbc;
     private static final String GET_BY_ID_QUERY = "SELECT * FROM MPA_RATING WHERE \"rating_id\" = :rating_id;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM MPA_RATING";
+    private static final String GET_ALL_QUERY = "SELECT * FROM MPA_RATING" +
+                                                " ORDER BY \"rating_id\"";
 
     @Override
     public Optional<MPA> getById(long id) {
@@ -41,7 +41,10 @@ public class JdbcMpaRepository implements MpaRepository {
         return jdbc.query(GET_ALL_QUERY, new RowMapper<MPA>() {
             @Override
             public MPA mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new MPA(rs.getLong("rating_id"), rs.getString("mpa_name"));
+                MPA mpa = new MPA();
+                mpa.setId(rs.getLong("rating_id"));
+                mpa.setName(rs.getString("mpa_name"));
+                return mpa;
             }
         });
     }
@@ -51,11 +54,10 @@ public class JdbcMpaRepository implements MpaRepository {
         @Override
         public MPA extractData(ResultSet rs) throws SQLException, DataAccessException {
             MPA mpa = null;
-            while(rs.next()){
-                mpa = new MPA(
-                        rs.getLong("rating_id"),
-                        rs.getString("mpa_name")
-                );
+            while (rs.next()) {
+                mpa = new MPA();
+                mpa.setId(rs.getLong("rating_id"));
+                mpa.setName(rs.getString("mpa_name"));
             }
             return mpa;
         }

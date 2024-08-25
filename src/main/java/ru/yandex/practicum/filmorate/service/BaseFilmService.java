@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.film.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.film.GenreRepository;
@@ -13,7 +11,6 @@ import ru.yandex.practicum.filmorate.repository.film.MpaRepository;
 import ru.yandex.practicum.filmorate.repository.user.UserRepository;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -24,6 +21,7 @@ public class BaseFilmService implements FilmService {
     private final UserRepository userRepository;
     private final MpaRepository mpaRepository;
     private final GenreRepository genreRepository;
+
 
     @Override
     public Collection<Film> getAll() {
@@ -44,27 +42,13 @@ public class BaseFilmService implements FilmService {
     @Override
     public Film update(Film film) {
 
-        Film oldFilm = filmRepository.get(film.getId())
+        filmRepository.get(film.getId())
                 .orElseThrow(() -> new NotFoundException("Film with id = " + film.getId() + " not found"));
-
-        final MPA mpa = mpaRepository.getById(film.getMpa().getId())
-                .orElseThrow(()->new NotFoundException("MPA не найден"));
-        final List<Long> genreIds = film.getGenres().stream().map(Genre::getId).toList();
-
-        final List<Genre> genres = genreRepository.getByIds(genreIds);
-        if(genreIds.size() != genres.size()) {
-            throw new NotFoundException("Жанры не найдены");
-        }
-        oldFilm.setName(film.getName());
-        oldFilm.setDescription(film.getDescription());
-        oldFilm.setDuration(film.getDuration());
-        oldFilm.setReleaseDate(film.getReleaseDate());
-        oldFilm.setMpa(mpa);
-        oldFilm.setGenres(new LinkedHashSet<>(genres));
 
         filmRepository.update(film);
 
-        return oldFilm;
+        return filmRepository.get(film.getId())
+                .orElseThrow(() -> new NotFoundException("Film with id = " + film.getId() + " not found"));
     }
 
     @Override

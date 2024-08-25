@@ -31,4 +31,15 @@ VALUES(2,1);
 INSERT INTO MPA_RATING ("mpa_name")
 VALUES('PG-13');
 
+INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(1, 1);
+INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(2, 1);
+INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(2, 2);
+INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(1, 2);
+
+INSERT INTO USERS ("email", "login", "name", "birthday")
+VALUES('umail@mail.com', 'user3', 'name3', '2004-01-20');
+
+INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(3, 2);
+INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(1, 3);
+
 

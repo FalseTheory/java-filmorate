@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
 
 
 import java.sql.ResultSet;
@@ -27,7 +26,8 @@ public class JdbcGenreRepository implements GenreRepository {
                                                                 "WHERE \"genre_id\" IN (\n" +
                                                                 "SELECT \"genre\" FROM FILM_GENRES\n" +
                                                                 "WHERE \"film_id\"=:film_id);";
-    private static final String GET_ALL_QUERY = "SELECT * FROM GENRES";
+    private static final String GET_ALL_QUERY = "SELECT * FROM GENRES" +
+                                                " ORDER BY \"genre_id\"";
 
 
     @Override
@@ -51,11 +51,11 @@ public class JdbcGenreRepository implements GenreRepository {
     public List<Genre> getByFilmId(long id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("film_id", id);
-        return jdbc.query(GET_ALL_GENRES_FOR_FILM_BY_ID, mapSqlParameterSource, new RowMapper<Genre>() {
-            @Override
-            public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Genre(rs.getLong("genre_id"),rs.getString("genre_name"));
-            }
+        return jdbc.query(GET_ALL_GENRES_FOR_FILM_BY_ID, mapSqlParameterSource, (rs, rowNum) -> {
+            Genre genre = new Genre();
+            genre.setId(rs.getLong("genre_id"));
+            genre.setName(rs.getString("genre_name"));
+            return genre;
         });
     }
 
@@ -64,7 +64,10 @@ public class JdbcGenreRepository implements GenreRepository {
         return jdbc.query(GET_ALL_QUERY, new RowMapper<Genre>() {
             @Override
             public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Genre(rs.getLong("genre_id"), rs.getString("genre_name"));
+                Genre genre = new Genre();
+                genre.setId(rs.getLong("genre_id"));
+                genre.setName(rs.getString("genre_name"));
+                return genre;
             }
         });
     }
@@ -74,11 +77,10 @@ public class JdbcGenreRepository implements GenreRepository {
         @Override
         public Genre extractData(ResultSet rs) throws SQLException, DataAccessException {
             Genre genre = null;
-            while(rs.next()){
-                genre = new Genre(
-                        rs.getLong("genre_id"),
-                        rs.getString("genre_name")
-                );
+            while (rs.next()) {
+                genre = new Genre();
+                genre.setId(rs.getLong("genre_id"));
+                genre.setName(rs.getString("genre_name"));
             }
             return genre;
         }

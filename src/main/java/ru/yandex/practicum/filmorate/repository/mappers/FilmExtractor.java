@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.repository.mappers;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -26,10 +25,18 @@ public class FilmExtractor implements ResultSetExtractor<Film> {
                 film.setDescription(rs.getString("description"));
                 film.setReleaseDate(rs.getDate("release_date").toLocalDate());
                 film.setDuration(rs.getInt("duration"));
-                film.setMpa(new MPA(rs.getLong("rating_id"), rs.getString("mpa_name")));
+                MPA mpa = new MPA();
+                mpa.setId(rs.getLong("rating_id"));
+                mpa.setName(rs.getString("mpa_name"));
+                film.setMpa(mpa);
                 film.setGenres(new LinkedHashSet<>());
             }
-            film.getGenres().add(new Genre(rs.getLong("genre_id"), rs.getString("genre_name")));
+            Genre genre = new Genre();
+            genre.setId(rs.getLong("genre_id"));
+            genre.setName(rs.getString("genre_name"));
+            if (genre.getName() != null) {
+                film.getGenres().add(genre);
+            }
         }
         return film;
     }
