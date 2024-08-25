@@ -157,7 +157,6 @@ class JdbcFilmRepositoryTest {
                 .isEqualTo(getTestFilm());
     }
 
-
     @Test
     @DisplayName("Должен возвращаться список популярных фильмов")
     void should_return_most_popular_films_list() {
