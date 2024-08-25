@@ -100,12 +100,12 @@ public class JdbcFilmRepository implements FilmRepository {
         mapSqlParameterSource.addValue("id", film.getId());
         jdbc.update(UPDATE_FILM_QUERY, mapSqlParameterSource);
 
-        String DELETE_QUERY = "DELETE FROM FILM_GENRES WHERE \"film_id\"=:film_id";
+        String deleteQuery = "DELETE FROM FILM_GENRES WHERE \"film_id\"=:film_id";
         mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("film_id", film.getId());
-        jdbc.update(DELETE_QUERY, mapSqlParameterSource);
+        jdbc.update(deleteQuery, mapSqlParameterSource);
 
-        String INSERT_GENRES_CONNECTION_QUERY = "INSERT INTO FILM_GENRES (\"film_id\", \"genre\") " +
+        String insertGenresConnectionQuery = "INSERT INTO FILM_GENRES (\"film_id\", \"genre\") " +
                                                 "VALUES(:film_id, :genre_id);";
 
         if (film.getGenres() != null) {
@@ -116,7 +116,7 @@ public class JdbcFilmRepository implements FilmRepository {
                 batchMapSqlParameterSource[id].addValue("film_id", film.getId());
                 batchMapSqlParameterSource[id].addValue("genre_id", genre.getId());
             }
-            jdbc.batchUpdate(INSERT_GENRES_CONNECTION_QUERY, batchMapSqlParameterSource);
+            jdbc.batchUpdate(insertGenresConnectionQuery, batchMapSqlParameterSource);
         }
 
 
