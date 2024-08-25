@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.repository.mappers;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;

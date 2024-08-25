@@ -7,12 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.mappers.UserExtractor;
+import ru.yandex.practicum.filmorate.repository.mappers.UserRowMapper;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @JdbcTest
-@Import(JdbcUserRepository.class)
+@Import({JdbcUserRepository.class, UserRowMapper.class, UserExtractor.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DisplayName("JdbcUserRepository")
 class JdbcUserRepositoryTest {
@@ -21,8 +28,25 @@ class JdbcUserRepositoryTest {
 
     static User getTestUser() {
         User user = new User();
+        user.setId(1L);
+        user.setBirthday(LocalDate.of(2000,1,20));
+        user.setLogin("user");
+        user.setName("name");
+        user.setEmail("mail@mail.com");
 
         return user;
+    }
+    static List<User> getTestUserList() {
+        User user = new User();
+        user.setId(2L);
+        user.setBirthday(LocalDate.of(2001,1,20));
+        user.setLogin("user2");
+        user.setName("name2");
+        user.setEmail("gmail@mail.com");
+        return List.of(
+                getTestUser(),
+                user
+        );
     }
 
     @Test
@@ -38,11 +62,24 @@ class JdbcUserRepositoryTest {
     @Test
     @DisplayName("Пользователь должен корректно возвращаться по существующему id")
     void should_return_user_by_id() {
+
+        Optional<User> optionalUser = userRepository.get(1L);
+
+        assertThat(optionalUser)
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .isEqualTo(getTestUser());
     }
 
     @Test
     @DisplayName("Должен возвращаться список всех пользователей")
     void should_return_all_users_in_list() {
+        List<User> userList = userRepository.getAll();
+
+        assertThat(userList)
+                .usingRecursiveComparison()
+                .isEqualTo(getTestUserList());
     }
 
     @Test

@@ -12,7 +12,7 @@ public interface FilmRepository {
 
     void update(Film film);
 
-    Collection<Film> getAll();
+    List<Film> getAll();
 
     Optional<Film> get(long filmId);
 

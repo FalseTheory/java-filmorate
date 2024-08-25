@@ -1,22 +1,29 @@
 package ru.yandex.practicum.filmorate.repository.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.mappers.UserExtractor;
+import ru.yandex.practicum.filmorate.repository.mappers.UserRowMapper;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("dbUserRepository")
+@Repository
 @RequiredArgsConstructor
 public class JdbcUserRepository implements UserRepository {
     private final NamedParameterJdbcOperations jdbc;
+    private final UserRowMapper mapper;
+    private final UserExtractor extractor;
 
 
-    private static final String GET_ALL_QUERY = "SELECT * FROM users";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
+    private static final String GET_ALL_QUERY = "SELECT * FROM USERS";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM USERS\n" +
+                                                  "WHERE \"id\" = :id;";
     private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
     private static final String INSERT_QUERY = "INSERT INTO users(email, login, name, birthday)" +
             " VALUES(?,?,?,?) returning id";
@@ -38,12 +45,20 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> get(long userId) {
-        return Optional.empty();
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", userId);
+        try{
+            User res = jdbc.query(GET_BY_ID_QUERY, mapSqlParameterSource, extractor);
+            return Optional.ofNullable(res);
+        } catch(EmptyResultDataAccessException ignored) {
+            return Optional.empty();
+        }
+
     }
 
     @Override
-    public Collection<User> getAll() {
-        return List.of();
+    public List<User> getAll() {
+        return jdbc.query(GET_ALL_QUERY, mapper);
     }
 
     @Override

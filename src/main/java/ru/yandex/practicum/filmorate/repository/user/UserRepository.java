@@ -14,7 +14,7 @@ public interface UserRepository {
 
     Optional<User> get(long userId);
 
-    Collection<User> getAll();
+    List<User> getAll();
 
     void addFriend(long userId, long friendId);
 

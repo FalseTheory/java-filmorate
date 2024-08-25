@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS films (
 
 CREATE TABLE IF NOT EXISTS users (
 	"id" serial NOT NULL UNIQUE,
-	"email" varchar(255) NOT NULL UNIQUE,
-	"login" bigint NOT NULL,
-	"name" bigint,
+	"email" varchar(255) NOT NULL,
+	"login" varchar NOT NULL,
+	"name" varchar,
 	"birthday" date NOT NULL,
 	PRIMARY KEY ("id")
 );
@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS film_genres (
 );
 
 CREATE TABLE IF NOT EXISTS genres (
-	"genre_id" serial NOT NULL primary key auto_increment,
-	"genre_name" varchar(255) NOT NULL UNIQUE,
+	"genre_id" serial NOT NULL unique,
+	"genre_name" varchar(255) NOT NULL,
 	PRIMARY KEY ("genre_id")
 );
 
 CREATE TABLE IF NOT EXISTS mpa_rating (
-	"rating_id" serial NOT NULL primary key auto_increment,
-	"mpa_name" bigint NOT NULL UNIQUE,
+	"rating_id" serial NOT NULL unique,
+	"mpa_name" varchar(10) NOT NULL,
 	PRIMARY KEY ("rating_id")
 );
 

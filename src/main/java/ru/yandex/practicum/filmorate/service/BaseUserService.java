@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BaseUserService implements UserService {
 
-    @Qualifier("dbUserRepository")
     private final UserRepository userRepository;
 
     @Override

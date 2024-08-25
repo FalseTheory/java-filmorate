@@ -11,13 +11,14 @@ import java.sql.SQLException;
 @Component
 public class FilmRowMapper implements RowMapper<Film> {
     @Override
-    public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+    public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
         Film film = new Film();
-        film.setId(resultSet.getLong("id"));
-        film.setName(resultSet.getString("name"));
-        film.setDescription(resultSet.getString("description"));
-        film.setReleaseDate(resultSet.getDate("release_date").toLocalDate());
-        //film.setMpa(MPA.values()[(int) resultSet.getLong("rating")]);
+        film.setId(rs.getLong("id"));
+        film.setName(rs.getString("name"));
+        film.setDuration(rs.getInt("duration"));
+        film.setDescription(rs.getString("description"));
+        film.setReleaseDate(rs.getDate("release_date").toLocalDate());
+        film.setMpa(new MPA(rs.getLong("rating_id"), rs.getString("mpa_name")));
 
         return film;
 
