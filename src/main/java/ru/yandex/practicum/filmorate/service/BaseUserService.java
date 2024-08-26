@@ -34,9 +34,6 @@ public class BaseUserService implements UserService {
     @Override
     public User update(User user) {
 
-        User oldUser = userRepository.get(user.getId())
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + user.getId() + " не найден"));
-
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }

@@ -6,8 +6,6 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.film.FilmRepository;
-import ru.yandex.practicum.filmorate.repository.film.GenreRepository;
-import ru.yandex.practicum.filmorate.repository.film.MpaRepository;
 import ru.yandex.practicum.filmorate.repository.user.UserRepository;
 
 import java.util.Collection;
@@ -19,8 +17,6 @@ public class BaseFilmService implements FilmService {
 
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
-    private final MpaRepository mpaRepository;
-    private final GenreRepository genreRepository;
 
 
     @Override
@@ -41,9 +37,6 @@ public class BaseFilmService implements FilmService {
 
     @Override
     public Film update(Film film) {
-
-        filmRepository.get(film.getId())
-                .orElseThrow(() -> new NotFoundException("Film with id = " + film.getId() + " not found"));
 
         filmRepository.update(film);
 
