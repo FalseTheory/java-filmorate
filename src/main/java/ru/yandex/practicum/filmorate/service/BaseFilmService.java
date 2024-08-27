@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.repository.film.GenreRepository;
 import ru.yandex.practicum.filmorate.repository.film.MpaRepository;
 import ru.yandex.practicum.filmorate.repository.user.UserRepository;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -39,8 +40,8 @@ public class BaseFilmService implements FilmService {
     @Override
     public Film save(Film film) {
 
-        mpaRepository.getById(film.getMpa().getId())
-                .orElseThrow(() -> new DataIntegrityViolationException("Mpa with id = " + film.getId() + " not found"));
+        film.setMpa(mpaRepository.getById(film.getMpa().getId())
+                .orElseThrow(() -> new DataIntegrityViolationException("Mpa with id = " + film.getId() + " not found")));
         if (film.getGenres() != null) {
             final List<Long> genreIds = film.getGenres()
                     .stream().map(Genre::getId).toList();
@@ -49,6 +50,7 @@ public class BaseFilmService implements FilmService {
             if (genreIds.size() != genres.size()) {
                 throw new DataIntegrityViolationException("Жанры не найдены");
             }
+            film.setGenres(new LinkedHashSet<>(genres));
         }
 
 
@@ -56,15 +58,15 @@ public class BaseFilmService implements FilmService {
     }
 
     @Override
-    public Film update(Film film) {
+    public Film update(Film dto) {
 
-        Film oldFilm = filmRepository.get(film.getId())
-                .orElseThrow(() -> new NotFoundException("Film with id = " + film.getId() + " not found"));
-        Mpa newMpa = mpaRepository.getById(film.getMpa().getId())
-                .orElseThrow(() -> new NotFoundException("Mpa with id = " + film.getId() + " not found"));
+        Film film = filmRepository.get(dto.getId())
+                .orElseThrow(() -> new NotFoundException("Film with id = " + dto.getId() + " not found"));
+        Mpa newMpa = mpaRepository.getById(dto.getMpa().getId())
+                .orElseThrow(() -> new NotFoundException("Mpa with id = " + dto.getId() + " not found"));
 
-        if (film.getGenres() != null) {
-            final List<Long> genreIds = film.getGenres()
+        if (dto.getGenres() != null) {
+            final List<Long> genreIds = dto.getGenres()
                     .stream().map(Genre::getId).toList();
 
             final List<Genre> genres = genreRepository.getByIds(genreIds);
@@ -72,18 +74,18 @@ public class BaseFilmService implements FilmService {
             if (genreIds.size() != genres.size()) {
                 throw new NotFoundException("Жанры не найдены");
             }
-            oldFilm.setGenres(film.getGenres());
+            film.setGenres(dto.getGenres());
         }
 
-        oldFilm.setName(film.getName());
-        oldFilm.setDuration(film.getDuration());
-        oldFilm.setDescription(film.getDescription());
-        oldFilm.setMpa(newMpa);
-        oldFilm.setReleaseDate(film.getReleaseDate());
+        film.setName(dto.getName());
+        film.setDuration(dto.getDuration());
+        film.setDescription(dto.getDescription());
+        film.setMpa(newMpa);
+        film.setReleaseDate(dto.getReleaseDate());
 
-        filmRepository.update(oldFilm);
+        filmRepository.update(film);
 
-        return oldFilm;
+        return film;
     }
 
     @Override
