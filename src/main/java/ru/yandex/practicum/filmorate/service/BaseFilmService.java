@@ -42,8 +42,8 @@ public class BaseFilmService implements FilmService {
         mpaRepository.getById(film.getMpa().getId())
                 .orElseThrow(() -> new DataIntegrityViolationException("Mpa with id = " + film.getId() + " not found"));
         if (film.getGenres() != null) {
-            final List<Long> genreIds = film.getGenres().
-                    stream().map(Genre::getId).toList();
+            final List<Long> genreIds = film.getGenres()
+                    .stream().map(Genre::getId).toList();
 
             final List<Genre> genres = genreRepository.getByIds(genreIds);
             if (genreIds.size() != genres.size()) {
@@ -64,8 +64,8 @@ public class BaseFilmService implements FilmService {
                 .orElseThrow(() -> new NotFoundException("Mpa with id = " + film.getId() + " not found"));
 
         if (film.getGenres() != null) {
-            final List<Long> genreIds = film.getGenres().
-                    stream().map(Genre::getId).toList();
+            final List<Long> genreIds = film.getGenres()
+                    .stream().map(Genre::getId).toList();
 
             final List<Genre> genres = genreRepository.getByIds(genreIds);
 
