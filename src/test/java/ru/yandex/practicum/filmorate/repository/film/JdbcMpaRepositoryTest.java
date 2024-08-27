@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,15 +22,15 @@ class JdbcMpaRepositoryTest {
 
     private final JdbcMpaRepository mpaRepository;
 
-    static MPA getTestMpa() {
-        MPA mpa = new MPA();
+    static Mpa getTestMpa() {
+        Mpa mpa = new Mpa();
         mpa.setId(1L);
         mpa.setName("PG");
         return mpa;
     }
 
-    static List<MPA> getTestMpaList() {
-        MPA mpa = new MPA();
+    static List<Mpa> getTestMpaList() {
+        Mpa mpa = new Mpa();
         mpa.setId(2L);
         mpa.setName("PG-13");
         return List.of(
@@ -43,7 +43,7 @@ class JdbcMpaRepositoryTest {
     @DisplayName("Рейтинг фильма должен возвращаться по его id")
     void should_correctly_return_rating_by_id() {
 
-        Optional<MPA> mpaOpt = mpaRepository.getById(1L);
+        Optional<Mpa> mpaOpt = mpaRepository.getById(1L);
 
         assertThat(mpaOpt)
                 .isPresent()
@@ -55,7 +55,7 @@ class JdbcMpaRepositoryTest {
     @Test
     @DisplayName("Список всех рейтингов должен корректно возвращаться")
     void should_correctly_return_all_ratings_list() {
-        List<MPA> mpas = mpaRepository.getAll();
+        List<Mpa> mpas = mpaRepository.getAll();
 
         assertThat(mpas)
                 .usingRecursiveComparison()

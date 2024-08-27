@@ -23,7 +23,7 @@ public class Film {
     LocalDate releaseDate;
     @DecimalMin(value = "1", message = "Длительность фильма должна быть представлена положительным числом")
     int duration;
-    MPA mpa;
+    Mpa mpa;
     LinkedHashSet<Genre> genres;
 
 

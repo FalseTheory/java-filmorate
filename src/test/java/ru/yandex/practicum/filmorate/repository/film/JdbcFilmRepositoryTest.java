@@ -8,9 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
-import ru.yandex.practicum.filmorate.repository.mappers.FilmExtractor;
-import ru.yandex.practicum.filmorate.repository.mappers.FilmRowMapper;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -21,19 +19,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @JdbcTest
-@Import({JdbcFilmRepository.class, FilmExtractor.class, FilmRowMapper.class, JdbcGenreRepository.class})
+@Import({JdbcFilmRepository.class, JdbcGenreRepository.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DisplayName("JdbcFilmRepository")
 class JdbcFilmRepositoryTest {
 
     private final JdbcFilmRepository filmRepository;
-    private static long TEST_FILM_ID = 1L;
+    private static final long TEST_FILM_ID = 1L;
 
-    static List<MPA> getMpaList() {
-        MPA mpa1 = new MPA();
+    static List<Mpa> getMpaList() {
+        Mpa mpa1 = new Mpa();
         mpa1.setId(1);
         mpa1.setName("PG");
-        MPA mpa2 = new MPA();
+        Mpa mpa2 = new Mpa();
         mpa2.setId(2);
         mpa2.setName("PG-13");
         return List.of(mpa1, mpa2);
@@ -74,9 +72,8 @@ class JdbcFilmRepositoryTest {
         film.setReleaseDate(LocalDate.of(2012, 1, 20));
         film.setDuration(10);
         film.setMpa(getMpaList().getFirst());
-        film.setGenres(new LinkedHashSet<>(
-                getGenresList()
-        ));
+        film.setGenres(new LinkedHashSet<>());
+        film.getGenres().add(getGenresList().getLast());
         return film;
 
     }

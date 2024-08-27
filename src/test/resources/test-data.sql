@@ -1,46 +1,44 @@
-INSERT INTO USERS ("email", "login", "name", "birthday")
-VALUES('mail@mail.com', 'user', 'name', '2000-01-20');
+insert into USERS ("email", "login", "name", "birthday")
+values('mail@mail.com', 'user', 'name', '2000-01-20');
 
-INSERT INTO USERS ("email", "login", "name", "birthday")
-VALUES('gmail@mail.com', 'user2', 'name2', '2001-01-20');
+insert into USERS ("email", "login", "name", "birthday")
+values('gmail@mail.com', 'user2', 'name2', '2001-01-20');
 
-INSERT INTO MPA_RATING ("mpa_name")
-VALUES('PG');
+insert into MPA_RATING ("mpa_name")
+values('PG');
 
-INSERT INTO MPA_RATING ("mpa_name")
-VALUES('PG-13');
+insert into MPA_RATING ("mpa_name")
+values('PG-13');
 
-INSERT INTO FILMS ("name","description","release_date","duration","rating")
-VALUES('film','description','2012-01-20',10,1);
+insert into FILMS ("name","description","release_date","duration","rating")
+values('film','description','2012-01-20',10,1);
 
-INSERT INTO GENRES ("genre_name")
-VALUES('action');
+insert into GENRES ("genre_name")
+values('action');
 
-INSERT INTO GENRES ("genre_name")
-VALUES('horror');
-
-INSERT INTO FILM_GENRES ("film_id", "genre")
-VALUES(1,1);
-
-INSERT INTO FILM_GENRES ("film_id", "genre")
-VALUES(1,2);
-
-INSERT INTO FILMS ("name","description","release_date","duration","rating")
-VALUES('film2','description2','2012-01-21',20,2);
-
-INSERT INTO FILM_GENRES ("film_id", "genre")
-VALUES(2,1);
+insert into GENRES ("genre_name")
+values('horror');
 
 
-INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(1, 1);
-INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(2, 1);
-INSERT INTO FILM_LIKES ("film_id", "user_id") VALUES(2, 2);
-INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(1, 2);
+insert into FILM_GENRES ("film_id", "genre")
+values(1,2);
 
-INSERT INTO USERS ("email", "login", "name", "birthday")
-VALUES('umail@mail.com', 'user3', 'name3', '2004-01-20');
+insert into FILMS ("name","description","release_date","duration","rating")
+values('film2','description2','2012-01-21',20,2);
 
-INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(3, 2);
-INSERT INTO FRIENDS ("user_id", "friend_id") VALUES(1, 3);
+insert into FILM_GENRES ("film_id", "genre")
+values(2,1);
+
+
+insert into FILM_LIKES ("film_id", "user_id") values(1, 1);
+insert into FILM_LIKES ("film_id", "user_id") values(2, 1);
+insert into FILM_LIKES ("film_id", "user_id") values(2, 2);
+insert into FRIENDS ("user_id", "friend_id") values(1, 2);
+
+insert into USERS ("email", "login", "name", "birthday")
+values('umail@mail.com', 'user3', 'name3', '2004-01-20');
+
+insert into FRIENDS ("user_id", "friend_id") values(3, 2);
+insert into FRIENDS ("user_id", "friend_id") values(1, 3);
 
 
