@@ -2,12 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface FilmService {
 
-    Collection<Film> getAll();
+    List<Film> getAll();
 
     Film get(long filmId);
 
